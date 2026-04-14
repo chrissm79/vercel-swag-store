@@ -24,5 +24,5 @@ This package uses the **Base UI** flavor of shadcn components (https://ui.shadcn
 Apps import via the package exports:
 ```tsx
 import "@workspace/ui/globals.css";
-import { Button } from "@workspace/ui/components/button";
+import { Button } from "@workspace/ui/button";
 ```

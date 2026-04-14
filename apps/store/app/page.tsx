@@ -1,4 +1,4 @@
-import { buttonVariants } from "@workspace/ui/components/button";
+import { buttonVariants } from "@workspace/ui/button";
 import Image from "next/image";
 
 export default function Home() {

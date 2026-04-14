@@ -1,0 +1,15 @@
+{
+  "tailwindCSS.experimental.configFile": {
+    "packages/ui/src/styles/globals.css": [
+      "apps/**",
+      "packages/ui/**"
+    ]
+  },
+  "tailwindCSS.includeLanguages": {
+    "typescript": "typescript",
+    "typescriptreact": "typescriptreact"
+  },
+  "files.associations": {
+    "*.css": "tailwindcss"
+  }
+}
