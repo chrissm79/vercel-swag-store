@@ -1,9 +1,15 @@
+import { ProductCard } from "@/components/product-card";
+import { storeClient } from "@/lib/store-client";
 import { buttonVariants } from "@workspace/ui/button";
 import { Icon } from "@workspace/ui/icon";
 import { cn } from "@workspace/ui/lib/utils";
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+  const products = await storeClient.getProducts({
+    featured: true,
+  });
+
   return (
     <>
       <div className="flex items-center gap-8 h-14 bg-foreground text-background" />
@@ -16,17 +22,17 @@ export default function Home() {
               who are passionate about creating the best swag for your team.
             </p>
             <Link
-              href="/products"
+              href="/search"
               className={cn(
                 buttonVariants({ variant: "default" }),
-                "font-semibold",
+                "font-semibold rounded-none",
               )}
             >
               Browse products
             </Link>
           </div>
           <div className="flex items-center justify-center">
-            <div className="size-full bg-muted rounded-lg aspect-square" />
+            <div className="size-full bg-muted aspect-square" />
           </div>
         </div>
         <div className="flex flex-col gap-4">
@@ -45,10 +51,8 @@ export default function Home() {
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className="flex flex-col gap-4">
-              <div className="size-full bg-muted rounded-lg aspect-square" />
-            </div>
+          {products.data.map((product) => (
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </div>
