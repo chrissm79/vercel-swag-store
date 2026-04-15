@@ -1,5 +1,5 @@
 import { ProductCard } from "@/components/product-card";
-import { storeClient } from "@/lib/store-client";
+import { storeClient } from "@/lib/server/store-client";
 
 export default async function SearchPage() {
   const products = await storeClient.getProducts();

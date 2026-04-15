@@ -1,5 +1,7 @@
 import { Icon } from "@workspace/ui/icon";
 import Link from "next/link";
+import { Suspense } from "react";
+import { UserCart } from "./user-cart";
 
 export function AppHeader() {
   return (
@@ -28,7 +30,13 @@ export function AppHeader() {
             </li>
           </ul>
         </div>
-        <Icon name="cart" className="size-5 text-muted-foreground" />
+        <Suspense
+          fallback={
+            <Icon name="cart" className="size-5 text-muted-foreground" />
+          }
+        >
+          <UserCart />
+        </Suspense>
       </nav>
       <nav className="h-15 flex md:hidden" />
     </header>

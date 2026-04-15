@@ -1,4 +1,4 @@
-import type { Product } from "@/lib/store-client";
+import type { Product } from "@/lib/server/store-client";
 import { buttonVariants } from "@workspace/ui/button";
 import { Icon } from "@workspace/ui/icon";
 import Image from "next/image";

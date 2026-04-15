@@ -1,5 +1,5 @@
 import { ProductCard } from "@/components/product-card";
-import { storeClient } from "@/lib/store-client";
+import { storeClient } from "@/lib/server/store-client";
 import { buttonVariants } from "@workspace/ui/button";
 import { Icon } from "@workspace/ui/icon";
 import { cn } from "@workspace/ui/lib/utils";

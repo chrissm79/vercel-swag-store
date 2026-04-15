@@ -1,7 +1,7 @@
-import { storeClient } from "@/lib/store-client";
+import { storeClient } from "@/lib/server/store-client";
 import { Button } from "@workspace/ui/button";
-import { Icon } from "@workspace/ui/icon";
 import Image from "next/image";
+import { AddToCart } from "./add-to-cart";
 
 type PageProps = {
   params: Promise<{ id: string }>;
@@ -44,10 +44,7 @@ export default async function ProductsPage({ params }: PageProps) {
             </p>
           )}
           {stock.data.inStock ? (
-            <Button className="rounded-none px-12!">
-              <span>Add to cart</span>
-              <Icon name="cart" className="size-3" />
-            </Button>
+            <AddToCart product={product.data} inStock={stock.data.stock} />
           ) : (
             <Button variant="outline" disabled className="rounded-none px-12!">
               <span>Out of stock</span>

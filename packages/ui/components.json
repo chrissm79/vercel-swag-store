@@ -12,9 +12,9 @@
   },
   "iconLibrary": "lucide",
   "aliases": {
-    "components": "@workspace/ui",
+    "components": "@workspace/ui/components",
     "utils": "@workspace/ui/lib/utils",
-    "ui": "@workspace/ui",
+    "ui": "@workspace/ui/components",
     "hooks": "@workspace/ui/hooks",
     "lib": "@workspace/ui/lib"
   }
