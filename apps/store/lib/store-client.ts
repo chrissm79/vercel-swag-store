@@ -16,6 +16,13 @@ export type Product = {
   createdAt: string;
 };
 
+export type ProductStock = {
+  productId: string;
+  stock: number;
+  inStock: boolean;
+  lowStock: boolean;
+};
+
 export type Pagination = {
   page: number;
   limit: number;
@@ -25,15 +32,20 @@ export type Pagination = {
   hasPreviousPage: boolean;
 };
 
-export type ApiPaginationResponse<T> = {
+export type ApiResponse<T> = {
   success: boolean;
   data: T;
+};
+
+export type ApiPaginationResponse<T> = ApiResponse<T> & {
   meta: {
     pagination: Pagination;
   };
 };
 
+export type ProductResponse = ApiResponse<Product>;
 export type ProductsResponse = ApiPaginationResponse<Product[]>;
+export type ProductStockResponse = ApiResponse<ProductStock>;
 
 export type ProductCategory =
   | "bottles"
@@ -52,6 +64,11 @@ export type GetProductsParams = {
 
 function createStoreClient() {
   return {
+    getProduct: async (id: string): Promise<ProductResponse> => {
+      const response = await fetch(`${baseUrl}/products/${id}`);
+      const data: ProductResponse = await response.json();
+      return data;
+    },
     getProducts: async (
       params?: GetProductsParams,
     ): Promise<ProductsResponse> => {
@@ -65,6 +82,11 @@ function createStoreClient() {
 
       const response = await fetch(url);
       const data: ProductsResponse = await response.json();
+      return data;
+    },
+    getProductStock: async (id: string): Promise<ProductStockResponse> => {
+      const response = await fetch(`${baseUrl}/products/${id}/stock`);
+      const data: ProductStockResponse = await response.json();
       return data;
     },
   };
