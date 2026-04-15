@@ -1,7 +1,8 @@
-import { ShoppingCart, type LucideProps } from "lucide-react";
+import { MoveRight, ShoppingCart, type LucideProps } from "lucide-react";
 
 const icons = {
   cart: ShoppingCart,
+  arrowRight: MoveRight,
 } as const;
 
 export type IconName = keyof typeof icons;

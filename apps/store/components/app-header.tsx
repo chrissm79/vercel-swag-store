@@ -3,8 +3,8 @@ import Link from "next/link";
 
 export function AppHeader() {
   return (
-    <header>
-      <nav className="flex items-center justify-between max-w-7xl mx-auto px-4 py-3">
+    <header className="border-b border-border">
+      <nav className="items-center justify-between max-w-7xl mx-auto px-4 py-3 hidden md:flex">
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2 py-2">
             <svg
@@ -21,19 +21,33 @@ export function AppHeader() {
           </Link>
           <ul className="flex items-center gap-4 text-sm">
             <li>
-              <Link href="/" className="text-muted-foreground py-2 px-2">
-                Home
-              </Link>
+              <AppHeaderLink href="/">Home</AppHeaderLink>
             </li>
             <li>
-              <Link href="/search" className="text-muted-foreground py-2 px-2">
-                Search
-              </Link>
+              <AppHeaderLink href="/search">Search</AppHeaderLink>
             </li>
           </ul>
         </div>
         <Icon name="cart" className="size-5 text-muted-foreground" />
       </nav>
+      <nav className="h-15 flex md:hidden" />
     </header>
+  );
+}
+
+function AppHeaderLink({
+  href,
+  children,
+}: {
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className="text-muted-foreground p-2 hover:text-foreground"
+    >
+      {children}
+    </Link>
   );
 }

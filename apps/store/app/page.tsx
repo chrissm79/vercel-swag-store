@@ -1,66 +1,57 @@
 import { buttonVariants } from "@workspace/ui/button";
-import Image from "next/image";
+import { Icon } from "@workspace/ui/icon";
+import { cn } from "@workspace/ui/lib/utils";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <>
+      <div className="flex items-center gap-8 h-14 bg-foreground text-background" />
+      <div className="flex flex-col gap-8 max-w-7xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col items-start gap-8 justify-center">
+            <h2 className="text-6xl font-bold">The best swag for your team</h2>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              We offer the best swag for your team. We are a team of developers
+              who are passionate about creating the best swag for your team.
+            </p>
+            <Link
+              href="/products"
+              className={cn(
+                buttonVariants({ variant: "default" }),
+                "font-semibold",
+              )}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              Browse products
+            </Link>
+          </div>
+          <div className="flex items-center justify-center">
+            <div className="size-full bg-muted rounded-lg aspect-square" />
+          </div>
+        </div>
+        <div className="flex flex-col gap-4">
+          <div className="flex justify-between items-center">
+            <h3 className="text-2xl font-bold">Featured Products</h3>
+            <Link
+              href="/products"
+              className={cn(
+                buttonVariants({ variant: "ghost" }),
+                "font-semibold text-muted-foreground",
+              )}
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              <span>View all products</span>
+              <Icon name="arrowRight" className="size-4" />
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={buttonVariants({ variant: "default", size: "lg" })}
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={buttonVariants({ variant: "outline", size: "lg" })}
-          >
-            Documentation
-          </a>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className="flex flex-col gap-4">
+              <div className="size-full bg-muted rounded-lg aspect-square" />
+            </div>
+          ))}
         </div>
-      </main>
-    </div>
+      </div>
+    </>
   );
 }
