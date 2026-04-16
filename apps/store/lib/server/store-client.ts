@@ -1,4 +1,7 @@
+"use cache";
 import "server-only";
+
+import { cacheLife, cacheTag } from "next/cache";
 
 const baseUrl = process.env.STORE_API_BASE_URL;
 
@@ -65,6 +68,11 @@ export type GetProductsParams = {
 function createStoreClient() {
   return {
     getProduct: async (id: string): Promise<ProductResponse> => {
+      "use cache";
+
+      cacheLife("products");
+      cacheTag("products", `product-${id}`);
+
       const response = await fetch(`${baseUrl}/products/${id}`);
       const data: ProductResponse = await response.json();
       return data;
@@ -72,6 +80,11 @@ function createStoreClient() {
     getProducts: async (
       params?: GetProductsParams,
     ): Promise<ProductsResponse> => {
+      "use cache";
+
+      cacheLife("products");
+      cacheTag("products");
+
       const url = new URL(`${baseUrl}/products`);
 
       for (const [key, value] of Object.entries(params ?? {})) {
@@ -85,6 +98,11 @@ function createStoreClient() {
       return data;
     },
     getProductStock: async (id: string): Promise<ProductStockResponse> => {
+      "use cache";
+
+      cacheLife("stock");
+      cacheTag("stock", `stock-${id}`);
+
       const response = await fetch(`${baseUrl}/products/${id}/stock`);
       const data: ProductStockResponse = await response.json();
       return data;

@@ -6,6 +6,7 @@ import {
   setCartSession,
 } from "@/lib/server/cart-session";
 import { Product } from "@/lib/server/store-client";
+import { revalidatePath } from "next/cache";
 
 export async function addToCart(
   formState: CartItem[],
@@ -28,6 +29,8 @@ export async function addToCart(
   }
   await setCartSession(cart);
 
+  revalidatePath("/", "layout");
+
   return cart;
 }
 
@@ -35,6 +38,7 @@ export async function removeFromCart(productId: string): Promise<CartItem[]> {
   const cart = await getCartSession();
   const updatedCart = cart.filter((item) => item.productId !== productId);
   await setCartSession(updatedCart);
+  revalidatePath("/", "layout");
   return updatedCart;
 }
 
@@ -47,5 +51,6 @@ export async function updateCartItem(
     item.productId === productId ? { ...item, quantity } : item,
   );
   await setCartSession(updatedCart);
+  revalidatePath("/", "layout");
   return updatedCart;
 }
