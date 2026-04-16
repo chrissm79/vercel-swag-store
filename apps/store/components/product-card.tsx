@@ -1,4 +1,5 @@
 import type { Product } from "@/lib/server/store-client";
+import { currencyFormatter } from "@/lib/string-utils";
 import { buttonVariants } from "@workspace/ui/button";
 import { Icon } from "@workspace/ui/icon";
 import Image from "next/image";
@@ -27,10 +28,7 @@ export function ProductCard({ product }: { product: Product }) {
         <p className="text-sm text-muted-foreground">{product.description}</p>
         <div className="flex items-center justify-between">
           <p className="text-muted-foreground font-bold text-lg">
-            {new Intl.NumberFormat("en-US", {
-              style: "currency",
-              currency: product.currency,
-            }).format(product.price)}
+            {currencyFormatter(product.currency).format(product.price)}
           </p>
           <Link
             href={`/products/${product.id}`}

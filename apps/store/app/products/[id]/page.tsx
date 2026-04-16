@@ -1,4 +1,5 @@
 import { storeClient } from "@/lib/server/store-client";
+import { currencyFormatter } from "@/lib/string-utils";
 import { Button } from "@workspace/ui/button";
 import Image from "next/image";
 import { AddToCart } from "./add-to-cart";
@@ -33,10 +34,9 @@ export default async function ProductsPage({ params }: PageProps) {
             ))}
           </div>
           <p className="text-muted-foreground font-bold text-2xl">
-            {new Intl.NumberFormat("en-US", {
-              style: "currency",
-              currency: product.data.currency,
-            }).format(product.data.price)}
+            {currencyFormatter(product.data.currency).format(
+              product.data.price,
+            )}
           </p>
           {stock.data.stock > 0 && (
             <p className="text-sm text-muted-foreground">

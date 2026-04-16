@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@workspace/ui/button";
-import { ButtonGroup } from "@workspace/ui/button-group";
 
 type ProductQuantityPickerProps = {
   max: number;
@@ -19,27 +18,27 @@ export function ProductQuantityPicker({
   return (
     <>
       <input type="hidden" name="quantity" value={quantity} />
-      <ButtonGroup className="w-full max-w-48">
+      <div className="flex w-full max-w-48 items-stretch">
         <Button
           type="button"
           variant="outline"
           size="icon"
-          className="rounded-none"
+          className="rounded-none border-r-0"
           onClick={() => onChange(clamp(quantity - 1))}
           disabled={quantity <= 1}
         >
-          <span aria-hidden className="t leading-none font-medium">
+          <span aria-hidden className="leading-none font-medium">
             −
           </span>
         </Button>
-        <div className="flex min-w-12 flex-1 items-center justify-center border border-input border-x-0 bg-background px-3 text-sm font-medium tabular-nums shadow-xs">
+        <div className="flex min-w-12 flex-1 items-center justify-center border border-input bg-background px-3 text-sm font-medium tabular-nums shadow-xs">
           {quantity}
         </div>
         <Button
           type="button"
           variant="outline"
           size="icon"
-          className="rounded-none"
+          className="rounded-none border-l-0"
           onClick={() => onChange(clamp(quantity + 1))}
           disabled={quantity >= max}
         >
@@ -47,7 +46,7 @@ export function ProductQuantityPicker({
             +
           </span>
         </Button>
-      </ButtonGroup>
+      </div>
     </>
   );
 }

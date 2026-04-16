@@ -27,12 +27,7 @@ export function AddToCart({ inStock: max, product }: AddToCartProps) {
   );
 
   return (
-    <form className="flex flex-col gap-2" action={action}>
-      <ProductQuantityPicker
-        max={max}
-        quantity={quantity}
-        onChange={setQuantity}
-      />
+    <form className="flex justify-between w-full gap-2" action={action}>
       <Button
         type="submit"
         className="rounded-none px-12!"
@@ -41,6 +36,11 @@ export function AddToCart({ inStock: max, product }: AddToCartProps) {
         <span>Add to cart</span>
         <Icon name="cart" className="size-3" />
       </Button>
+      <ProductQuantityPicker
+        max={max}
+        quantity={quantity}
+        onChange={setQuantity}
+      />
     </form>
   );
 }
