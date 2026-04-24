@@ -1,81 +1,16 @@
-"use cache";
 import "server-only";
 
 import { cacheLife, cacheTag } from "next/cache";
+import {
+  CategoriesResponse,
+  GetProductsParams,
+  ProductResponse,
+  ProductsResponse,
+  ProductStockResponse,
+  PromotionResponse,
+} from "./store.types";
 
 const baseUrl = process.env.STORE_API_BASE_URL;
-
-export type Product = {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  price: number;
-  currency: string;
-  category: string;
-  images: string[];
-  featured: boolean;
-  tags: string[];
-  createdAt: string;
-};
-
-export type ProductStock = {
-  productId: string;
-  stock: number;
-  inStock: boolean;
-  lowStock: boolean;
-};
-
-export type Promotion = {
-  id: string;
-  title: string;
-  description: string;
-  discountPercent: number;
-  code: string;
-  validFrom: string;
-  validUntil: string;
-  active: boolean;
-};
-
-export type Pagination = {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-};
-
-export type ApiResponse<T> = {
-  success: boolean;
-  data: T;
-};
-
-export type ApiPaginationResponse<T> = ApiResponse<T> & {
-  meta: {
-    pagination: Pagination;
-  };
-};
-
-export type ProductResponse = ApiResponse<Product>;
-export type ProductsResponse = ApiPaginationResponse<Product[]>;
-export type ProductStockResponse = ApiResponse<ProductStock>;
-export type PromotionResponse = ApiResponse<Promotion>;
-
-export type ProductCategory =
-  | "bottles"
-  | "cups"
-  | "mugs"
-  | "desk"
-  | "stationery";
-
-export type GetProductsParams = {
-  page?: number;
-  limit?: number;
-  category?: ProductCategory;
-  search?: string;
-  featured?: boolean;
-};
 
 function createStoreClient() {
   return {
@@ -124,6 +59,16 @@ function createStoreClient() {
       // cache invalid promotions.
       const response = await fetch(`${baseUrl}/promotions`);
       const data: PromotionResponse = await response.json();
+      return data;
+    },
+    getCategories: async (): Promise<CategoriesResponse> => {
+      "use cache";
+
+      cacheLife("categories");
+      cacheTag("categories");
+
+      const response = await fetch(`${baseUrl}/categories`);
+      const data: CategoriesResponse = await response.json();
       return data;
     },
   };
