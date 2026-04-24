@@ -11,9 +11,10 @@ import { useActionState, useState } from "react";
 type AddToCartProps = {
   product: Product;
   inStock: number;
+  disabled?: boolean;
 };
 
-export function AddToCart({ inStock: max, product }: AddToCartProps) {
+export function AddToCart({ inStock: max, product, disabled }: AddToCartProps) {
   const [quantity, setQuantity] = useState(1);
   const [, action, isPending] = useActionState(
     async (prevState: CartItem[], formData: FormData) => {
@@ -31,7 +32,7 @@ export function AddToCart({ inStock: max, product }: AddToCartProps) {
       <Button
         type="submit"
         className="rounded-none px-12!"
-        disabled={isPending}
+        disabled={isPending || disabled}
       >
         <span>Add to cart</span>
         <Icon name="cart" className="size-3" />

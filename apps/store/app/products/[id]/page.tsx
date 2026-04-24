@@ -1,6 +1,5 @@
 import { storeClient, type Product } from "@/lib/server/store-client";
 import { currencyFormatter } from "@/lib/string-utils";
-import { Button } from "@workspace/ui/button";
 import { Metadata } from "next";
 import Image from "next/image";
 import { Suspense } from "react";
@@ -32,7 +31,10 @@ export default function ProductsPage({ params }: PageProps) {
 
 async function ProductDetail({ params }: PageProps) {
   const { id } = await params;
-  const { data: product } = await storeClient.getProduct(id);
+  const [{ data: product }, { data: stock }] = await Promise.all([
+    storeClient.getProduct(id),
+    storeClient.getProductStock(id),
+  ]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -71,9 +73,7 @@ async function ProductDetail({ params }: PageProps) {
               Featured
             </span>
           )}
-          <Suspense fallback={null}>
-            <LowStockBadge productId={product.id} />
-          </Suspense>
+          <StockBadge lowStock={stock.lowStock} inStock={stock.inStock} />
         </div>
       </div>
     </div>
@@ -88,23 +88,29 @@ async function StockAction({ product }: { product: Product }) {
       {stock.stock > 0 && (
         <p className="text-sm text-muted-foreground">{stock.stock} in stock</p>
       )}
-      {stock.inStock ? (
-        <AddToCart product={product} inStock={stock.stock} />
-      ) : (
-        <Button variant="outline" disabled className="rounded-none px-12!">
-          <span>Out of stock</span>
-        </Button>
-      )}
+      <AddToCart
+        product={product}
+        inStock={stock.stock}
+        disabled={!stock.inStock || stock.stock <= 0}
+      />
     </>
   );
 }
 
-async function LowStockBadge({ productId }: { productId: string }) {
-  const { data: stock } = await storeClient.getProductStock(productId);
-  if (!stock.lowStock) return null;
+async function StockBadge({
+  lowStock,
+  inStock,
+}: {
+  lowStock: boolean;
+  inStock: boolean;
+}) {
+  if (!lowStock && inStock) return null;
+
+  const label = lowStock ? "Low stock" : "Out of stock";
+
   return (
     <span className="text-xs font-medium bg-destructive text-white px-2 py-1">
-      Low stock
+      {label}
     </span>
   );
 }
