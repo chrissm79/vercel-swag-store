@@ -1,4 +1,4 @@
-import type { Product } from "@/lib/server/store-client";
+import { Product } from "@/lib/server/store.types";
 import { currencyFormatter } from "@/lib/string-utils";
 import { buttonVariants } from "@workspace/ui/button";
 import { Icon } from "@workspace/ui/icon";

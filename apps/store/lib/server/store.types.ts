@@ -66,6 +66,6 @@ export type GetProductsParams = {
   page?: number;
   limit?: number;
   category?: string;
-  query?: string;
+  search?: string;
   featured?: boolean;
 };
