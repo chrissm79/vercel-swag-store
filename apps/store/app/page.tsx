@@ -1,9 +1,16 @@
 import { ProductCard } from "@/components/product-card";
+import { PromoBanner } from "@/components/promo-banner";
 import { storeClient } from "@/lib/server/store-client";
 import { buttonVariants } from "@workspace/ui/button";
 import { Icon } from "@workspace/ui/icon";
 import { cn } from "@workspace/ui/lib/utils";
+import { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: "Home",
+};
 
 export default async function Home() {
   const products = await storeClient.getProducts({
@@ -12,8 +19,10 @@ export default async function Home() {
 
   return (
     <>
-      <div className="flex items-center gap-8 h-14 bg-foreground text-background" />
-      <div className="flex flex-col gap-8 max-w-7xl mx-auto px-4 py-8">
+      <Suspense fallback={null}>
+        <PromoBanner />
+      </Suspense>
+      <div className="container flex flex-col gap-8 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="flex flex-col items-start gap-8 justify-center">
             <h2 className="text-6xl font-bold">The best swag for your team</h2>

@@ -1,6 +1,7 @@
 import { storeClient, type Product } from "@/lib/server/store-client";
 import { currencyFormatter } from "@/lib/string-utils";
 import { Button } from "@workspace/ui/button";
+import { Metadata } from "next";
 import Image from "next/image";
 import { Suspense } from "react";
 import { AddToCart } from "./add-to-cart";
@@ -9,9 +10,19 @@ type PageProps = {
   params: Promise<{ id: string }>;
 };
 
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const { data: product } = await storeClient.getProduct(id);
+  return {
+    title: product.name,
+  };
+}
+
 export default function ProductsPage({ params }: PageProps) {
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="container py-8">
       <Suspense fallback={<ProductDetailSkeleton />}>
         <ProductDetail params={params} />
       </Suspense>
