@@ -26,6 +26,17 @@ export type ProductStock = {
   lowStock: boolean;
 };
 
+export type Promotion = {
+  id: string;
+  title: string;
+  description: string;
+  discountPercent: number;
+  code: string;
+  validFrom: string;
+  validUntil: string;
+  active: boolean;
+};
+
 export type Pagination = {
   page: number;
   limit: number;
@@ -49,6 +60,7 @@ export type ApiPaginationResponse<T> = ApiResponse<T> & {
 export type ProductResponse = ApiResponse<Product>;
 export type ProductsResponse = ApiPaginationResponse<Product[]>;
 export type ProductStockResponse = ApiResponse<ProductStock>;
+export type PromotionResponse = ApiResponse<Promotion>;
 
 export type ProductCategory =
   | "bottles"
@@ -105,6 +117,13 @@ function createStoreClient() {
 
       const response = await fetch(`${baseUrl}/products/${id}/stock`);
       const data: ProductStockResponse = await response.json();
+      return data;
+    },
+    getPromotions: async (): Promise<PromotionResponse> => {
+      // NOTE: Not caching the response because we don't want to
+      // cache invalid promotions.
+      const response = await fetch(`${baseUrl}/promotions`);
+      const data: PromotionResponse = await response.json();
       return data;
     },
   };

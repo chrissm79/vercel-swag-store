@@ -6,7 +6,7 @@ import { UserCart } from "./user-cart";
 export function AppHeader() {
   return (
     <header className="border-b border-border">
-      <nav className="items-center justify-between max-w-7xl mx-auto px-4 py-3 hidden md:flex">
+      <nav className="container items-center justify-between py-3 hidden md:flex">
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2 py-2">
             <svg
