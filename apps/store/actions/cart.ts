@@ -1,56 +1,53 @@
 "use server";
 
 import {
-  CartItem,
-  getCartSession,
-  setCartSession,
+  getCartToken,
+  getOrCreateCartToken,
 } from "@/lib/server/cart-session";
-import { Product } from "@/lib/server/store-client";
+import { storeClient, type Cart } from "@/lib/server/store-client";
 import { revalidatePath } from "next/cache";
 
-export async function addToCart(
-  formState: CartItem[],
-  product: Product & { quantity: number },
-): Promise<CartItem[]> {
-  const cart = await getCartSession();
-  const existingItem = cart.find((item) => item.productId === product.id);
+type AddToCartInput = {
+  productId: string;
+  quantity: number;
+};
 
-  if (existingItem) {
-    existingItem.quantity += product.quantity;
-  } else {
-    cart.push({
-      currency: product.currency,
-      name: product.name,
-      price: product.price,
-      image: product.images[0],
-      productId: product.id,
-      quantity: product.quantity,
-    });
-  }
-  await setCartSession(cart);
+export async function addToCart(
+  formState: Cart | null,
+  input: AddToCartInput,
+): Promise<Cart | null> {
+  const token = await getOrCreateCartToken();
+  const cart = await storeClient.addCartItem(
+    token,
+    input.productId,
+    input.quantity,
+  );
 
   revalidatePath("/", "layout");
-
-  return cart;
+  return cart.data;
 }
 
-export async function removeFromCart(productId: string): Promise<CartItem[]> {
-  const cart = await getCartSession();
-  const updatedCart = cart.filter((item) => item.productId !== productId);
-  await setCartSession(updatedCart);
+export async function removeFromCart(itemId: string): Promise<Cart | null> {
+  const token = await getCartToken();
+
+  if (!token) return null;
+
+  const cart = await storeClient.removeCartItem(token, itemId);
+
   revalidatePath("/", "layout");
-  return updatedCart;
+  return cart.data;
 }
 
 export async function updateCartItem(
-  productId: string,
+  itemId: string,
   quantity: number,
-): Promise<CartItem[]> {
-  const cart = await getCartSession();
-  const updatedCart = cart.map((item) =>
-    item.productId === productId ? { ...item, quantity } : item,
-  );
-  await setCartSession(updatedCart);
+): Promise<Cart | null> {
+  const token = await getCartToken();
+
+  if (!token) return null;
+
+  const cart = await storeClient.updateCartItem(token, itemId, quantity);
+
   revalidatePath("/", "layout");
-  return updatedCart;
+  return cart.data;
 }

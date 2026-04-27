@@ -4,3 +4,7 @@ export function currencyFormatter(currency: string) {
     currency,
   });
 }
+
+export function formatCents(value: number) {
+  return value / 100;
+}

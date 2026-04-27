@@ -50,9 +50,40 @@ function createStoreClient() {
 
       return apiRequest((client) => client.listCategories());
     },
+    createCart: () => {
+      return apiRequest((client) => client.createCart());
+    },
+    getCart: (token: string) => {
+      return apiRequest((client) =>
+        client.getCart({ headers: { "x-cart-token": token } }),
+      );
+    },
+    addCartItem: (token: string, productId: string, quantity: number) => {
+      return apiRequest((client) =>
+        client.addItemToCart({
+          body: { productId, quantity },
+          headers: { "x-cart-token": token },
+        }),
+      );
+    },
+    updateCartItem: (token: string, itemId: string, quantity: number) => {
+      return apiRequest((client) =>
+        client.updateCartItem({
+          body: { quantity },
+          headers: { "x-cart-token": token },
+          path: { itemId },
+        }),
+      );
+    },
+    removeCartItem: (token: string, itemId: string) => {
+      return apiRequest((client) =>
+        client.removeCartItem({
+          headers: { "x-cart-token": token },
+          path: { itemId },
+        }),
+      );
+    },
   };
 }
 
 export const storeClient = createStoreClient();
-
-export type { Product } from "../api";

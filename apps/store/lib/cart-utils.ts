@@ -1,9 +1,9 @@
-import { CartItem } from "./server/cart-session";
+import { CartWithProducts } from "./api";
 
-export function getItemCount(cart: CartItem[]) {
-  return cart.reduce((total, item) => total + item.quantity, 0);
+export function getItemCount(cart: CartWithProducts | null) {
+  return cart?.totalItems ?? 0;
 }
 
-export function getSubtotal(cart: CartItem[]) {
-  return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+export function getSubtotal(cart: CartWithProducts | null) {
+  return cart?.subtotal ?? 0;
 }
