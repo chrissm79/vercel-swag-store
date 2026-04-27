@@ -20,6 +20,11 @@ export const metadata: Metadata = {
     absolute: "Swag Store",
   },
   description: "Vercel swag store",
+  openGraph: {
+    siteName: "Swag Store",
+    locale: "en_US",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
