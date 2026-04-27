@@ -1,10 +1,8 @@
 "use server";
 
-import {
-  getCartToken,
-  getOrCreateCartToken,
-} from "@/lib/server/cart-session";
-import { storeClient, type Cart } from "@/lib/server/store-client";
+import { CartWithProducts } from "@/lib/api";
+import { getCartToken, getOrCreateCartToken } from "@/lib/server/cart-session";
+import { storeClient } from "@/lib/server/store-client";
 import { revalidatePath } from "next/cache";
 
 type AddToCartInput = {
@@ -13,9 +11,9 @@ type AddToCartInput = {
 };
 
 export async function addToCart(
-  formState: Cart | null,
+  formState: CartWithProducts | null,
   input: AddToCartInput,
-): Promise<Cart | null> {
+): Promise<CartWithProducts | null> {
   const token = await getOrCreateCartToken();
   const cart = await storeClient.addCartItem(
     token,
@@ -27,7 +25,9 @@ export async function addToCart(
   return cart.data;
 }
 
-export async function removeFromCart(itemId: string): Promise<Cart | null> {
+export async function removeFromCart(
+  itemId: string,
+): Promise<CartWithProducts | null> {
   const token = await getCartToken();
 
   if (!token) return null;
@@ -41,7 +41,7 @@ export async function removeFromCart(itemId: string): Promise<Cart | null> {
 export async function updateCartItem(
   itemId: string,
   quantity: number,
-): Promise<Cart | null> {
+): Promise<CartWithProducts | null> {
   const token = await getCartToken();
 
   if (!token) return null;

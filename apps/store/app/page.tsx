@@ -1,10 +1,12 @@
 import { ProductCard } from "@/components/product-card";
-import { PromoBanner } from "@/components/promo-banner";
+import { PromoBanner, PromoBannerSkeleton } from "@/components/promo-banner";
 import { storeClient } from "@/lib/server/store-client";
 import { buttonVariants } from "@workspace/ui/button";
 import { Icon } from "@workspace/ui/icon";
 import { cn } from "@workspace/ui/lib/utils";
+import { Skeleton } from "@workspace/ui/skeleton";
 import { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -13,13 +15,9 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const products = await storeClient.getProducts({
-    featured: "true",
-  });
-
   return (
     <>
-      <Suspense fallback={null}>
+      <Suspense fallback={<PromoBannerSkeleton />}>
         <PromoBanner />
       </Suspense>
       <div className="container flex flex-col gap-8 py-8">
@@ -41,7 +39,14 @@ export default async function Home() {
             </Link>
           </div>
           <div className="flex items-center justify-center">
-            <div className="size-full bg-muted aspect-square" />
+            <div className="size-full bg-muted aspect-square relative">
+              <Image
+                src="/hero.png"
+                alt="Hero"
+                fill
+                className="object-contain"
+              />
+            </div>
           </div>
         </div>
         <div className="flex flex-col gap-4">
@@ -59,12 +64,34 @@ export default async function Home() {
             </Link>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {products.data.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        <Suspense fallback={<FeaturedProductsSkeleton />}>
+          <FeaturedProducts />
+        </Suspense>
       </div>
     </>
+  );
+}
+
+function FeaturedProductsSkeleton() {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {Array.from({ length: 6 }).map((_, index) => (
+        <Skeleton key={index} className="rounded-md aspect-square" />
+      ))}
+    </div>
+  );
+}
+
+async function FeaturedProducts() {
+  const products = await storeClient.getProducts({
+    featured: "true",
+  });
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {products.data.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </div>
   );
 }

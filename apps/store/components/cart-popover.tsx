@@ -1,7 +1,7 @@
 "use client";
 
 import { removeFromCart, updateCartItem } from "@/actions/cart";
-import type { Cart } from "@/lib/server/store-client";
+import { CartWithProducts } from "@/lib/api";
 import { currencyFormatter, formatCents } from "@/lib/string-utils";
 import { Button } from "@workspace/ui/button";
 import { ButtonGroup } from "@workspace/ui/button-group";
@@ -11,7 +11,7 @@ import { Separator } from "@workspace/ui/separator";
 import Image from "next/image";
 
 type CartPopoverProps = {
-  cart: Cart | null;
+  cart: CartWithProducts | null;
 };
 
 export function CartPopover({ cart }: CartPopoverProps) {
@@ -76,9 +76,7 @@ export function CartPopover({ cart }: CartPopoverProps) {
                     <div className="flex-1 flex flex-col gap-2 min-w-0">
                       <div className="flex justify-between gap-2">
                         <div className="min-w-0">
-                          <p className="text-sm font-medium truncate">
-                            {name}
-                          </p>
+                          <p className="text-sm font-medium truncate">{name}</p>
                           <p className="text-xs text-muted-foreground">
                             {formatter.format(
                               formatCents(item.product.price ?? 0),
@@ -98,10 +96,7 @@ export function CartPopover({ cart }: CartPopoverProps) {
                             size="icon"
                             className="size-8 rounded-none"
                             onClick={() =>
-                              handleUpdate(
-                                itemId,
-                                (item.quantity ?? 0) - 1,
-                              )
+                              handleUpdate(itemId, (item.quantity ?? 0) - 1)
                             }
                             disabled={(item.quantity ?? 0) <= 1}
                             aria-label="Decrease quantity"
@@ -122,10 +117,7 @@ export function CartPopover({ cart }: CartPopoverProps) {
                             size="icon"
                             className="size-8 rounded-none"
                             onClick={() =>
-                              handleUpdate(
-                                itemId,
-                                (item.quantity ?? 0) + 1,
-                              )
+                              handleUpdate(itemId, (item.quantity ?? 0) + 1)
                             }
                             aria-label="Increase quantity"
                           >

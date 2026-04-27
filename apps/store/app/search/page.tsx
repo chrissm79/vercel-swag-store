@@ -29,13 +29,14 @@ type SearchPageProps = {
 async function SearchResults({ searchParams }: SearchPageProps) {
   const { q: search, category, page: pageParam } = await searchParams;
   const page = extractPageParam(pageParam);
-
-  const [products, categories] = await Promise.all([
-    storeClient.getProducts({ search, category, page, limit: 5 }),
-    storeClient.getCategories(),
-  ]);
-
+  const products = await storeClient.getProducts({
+    search,
+    category,
+    page,
+    limit: 5,
+  });
   const totalPages = products.meta.pagination.totalPages;
+
   const paginationUrls = Array.from({ length: totalPages }).map((_, index) => {
     const urlParams = new URLSearchParams();
     if (search) urlParams.set("q", search);
@@ -47,7 +48,9 @@ async function SearchResults({ searchParams }: SearchPageProps) {
   return (
     <>
       <div className="flex gap-4 items-center justify-between">
-        <SearchFilter categories={categories.data} />
+        <Suspense fallback={<Skeleton className="h-9 w-48" />}>
+          <SearchCategories />
+        </Suspense>
         <SearchInput />
       </div>
       {products.data.length === 0 && <EmptySearchResults />}
@@ -75,6 +78,12 @@ async function SearchResults({ searchParams }: SearchPageProps) {
       )}
     </>
   );
+}
+
+async function SearchCategories() {
+  const { data: categories } = await storeClient.getCategories();
+
+  return <SearchFilter categories={categories} />;
 }
 
 function SearchResultsSkeleton() {

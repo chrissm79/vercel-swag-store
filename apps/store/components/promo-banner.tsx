@@ -1,4 +1,5 @@
 import { storeClient } from "@/lib/server/store-client";
+import { Skeleton } from "@workspace/ui/skeleton";
 
 export async function PromoBanner() {
   const { data: promotions } = await storeClient.getPromotions();
@@ -18,6 +19,16 @@ export async function PromoBanner() {
             checkout)
           </span>
         </p>
+      </div>
+    </div>
+  );
+}
+
+export function PromoBannerSkeleton() {
+  return (
+    <div className="bg-primary text-primary-foreground">
+      <div className="container py-4">
+        <Skeleton className="h-5 w-1/2 mx-auto" />
       </div>
     </div>
   );

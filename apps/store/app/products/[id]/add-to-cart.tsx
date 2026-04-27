@@ -2,7 +2,7 @@
 
 import { addToCart } from "@/actions/cart";
 import { ProductQuantityPicker } from "@/components/product-quantity-picker";
-import { type Cart, type Product } from "@/lib/server/store-client";
+import { CartWithProducts, Product } from "@/lib/api/generated";
 import { Button } from "@workspace/ui/button";
 import { Icon } from "@workspace/ui/icon";
 import { useActionState, useState } from "react";
@@ -16,9 +16,9 @@ type AddToCartProps = {
 export function AddToCart({ inStock: max, product, disabled }: AddToCartProps) {
   const [quantity, setQuantity] = useState(1);
   const [, action, isPending] = useActionState(
-    async (prevState: Cart | null, formData: FormData) => {
+    async (prevState: CartWithProducts | null, formData: FormData) => {
       const qty = Number(formData.get("quantity"));
-      if (qty <= 0 || qty > max) {
+      if (qty <= 0 || qty > max || !product.id) {
         return prevState;
       }
       return addToCart(prevState, { productId: product.id, quantity: qty });

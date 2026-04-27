@@ -13,21 +13,13 @@ function createStoreClient() {
 
       return apiRequest((client) => client.getProduct({ path: { id } }));
     },
-    getProducts: async (params?: GetProductsParams) => {
+    getProducts: async (query?: GetProductsParams) => {
       "use cache";
 
       cacheLife("products");
       cacheTag("products");
 
-      return apiRequest((client) =>
-        client.listProducts({
-          query: {
-            search: params?.search,
-            category: params?.category,
-            page: params?.page,
-          },
-        }),
-      );
+      return apiRequest((client) => client.listProducts({ query }));
     },
     getProductStock: async (id: string) => {
       "use cache";

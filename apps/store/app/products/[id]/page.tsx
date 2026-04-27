@@ -1,4 +1,5 @@
-import { storeClient, type Product } from "@/lib/server/store-client";
+import { Product, ProductStock } from "@/lib/api";
+import { storeClient } from "@/lib/server/store-client";
 import { currencyFormatter } from "@/lib/string-utils";
 import { Metadata } from "next";
 import Image from "next/image";
@@ -56,9 +57,7 @@ async function ProductDetail({ params }: PageProps) {
         <p className="text-muted-foreground font-bold text-2xl">
           {currencyFormatter(product.currency).format(product.price)}
         </p>
-        <Suspense fallback={<StockSkeleton />}>
-          <StockAction product={product} />
-        </Suspense>
+        <StockAction product={product} stock={stock} />
       </div>
       <div className="relative aspect-square bg-white overflow-hidden border-b border-border">
         <Image
@@ -80,9 +79,13 @@ async function ProductDetail({ params }: PageProps) {
   );
 }
 
-async function StockAction({ product }: { product: Product }) {
-  const { data: stock } = await storeClient.getProductStock(product.id);
-
+async function StockAction({
+  product,
+  stock,
+}: {
+  product: Product;
+  stock: ProductStock;
+}) {
   return (
     <>
       {stock.stock > 0 && (
