@@ -1,7 +1,7 @@
 "use client";
 
 import { useParamValue } from "@/hooks/use-category-param";
-import { Category } from "@/lib/server/store.types";
+import { Category } from "@/lib/api";
 import {
   Combobox,
   ComboboxContent,

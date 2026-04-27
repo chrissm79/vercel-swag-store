@@ -1,77 +1,58 @@
 import "server-only";
 
 import { cacheLife, cacheTag } from "next/cache";
-import {
-  CategoriesResponse,
-  GetProductsParams,
-  ProductResponse,
-  ProductsResponse,
-  ProductStockResponse,
-  PromotionResponse,
-} from "./store.types";
-
-const baseUrl = process.env.STORE_API_BASE_URL;
+import { apiRequest, GetProductsParams } from "../api";
 
 function createStoreClient() {
   return {
-    getProduct: async (id: string): Promise<ProductResponse> => {
+    getProduct: async (id: string) => {
       "use cache";
 
       cacheLife("products");
       cacheTag("products", `product-${id}`);
 
-      const response = await fetch(`${baseUrl}/products/${id}`);
-      const data: ProductResponse = await response.json();
-      return data;
+      return apiRequest((client) => client.getProduct({ path: { id } }));
     },
-    getProducts: async (
-      params?: GetProductsParams,
-    ): Promise<ProductsResponse> => {
+    getProducts: async (params?: GetProductsParams) => {
       "use cache";
 
       cacheLife("products");
       cacheTag("products");
 
-      const url = new URL(`${baseUrl}/products`);
-
-      for (const [key, value] of Object.entries(params ?? {})) {
-        if (value !== undefined) {
-          url.searchParams.set(key, String(value));
-        }
-      }
-
-      const response = await fetch(url);
-      const data: ProductsResponse = await response.json();
-      return data;
+      return apiRequest((client) =>
+        client.listProducts({
+          query: {
+            search: params?.search,
+            category: params?.category,
+            page: params?.page,
+          },
+        }),
+      );
     },
-    getProductStock: async (id: string): Promise<ProductStockResponse> => {
+    getProductStock: async (id: string) => {
       "use cache";
 
       cacheLife("stock");
       cacheTag("stock", `stock-${id}`);
 
-      const response = await fetch(`${baseUrl}/products/${id}/stock`);
-      const data: ProductStockResponse = await response.json();
-      return data;
+      return apiRequest((client) => client.getProductStock({ path: { id } }));
     },
-    getPromotions: async (): Promise<PromotionResponse> => {
+    getPromotions: async () => {
       // NOTE: Not caching the response because we don't want to
       // cache invalid promotions.
-      const response = await fetch(`${baseUrl}/promotions`);
-      const data: PromotionResponse = await response.json();
-      return data;
+      return apiRequest((client) => client.getActivePromotion());
     },
-    getCategories: async (): Promise<CategoriesResponse> => {
+    getCategories: async () => {
       "use cache";
 
       cacheLife("categories");
       cacheTag("categories");
 
-      const response = await fetch(`${baseUrl}/categories`);
-      const data: CategoriesResponse = await response.json();
-      return data;
+      return apiRequest((client) => client.listCategories());
     },
   };
 }
 
 export const storeClient = createStoreClient();
+
+export type { Product } from "../api";

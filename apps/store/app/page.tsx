@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const products = await storeClient.getProducts({
-    featured: true,
+    featured: "true",
   });
 
   return (

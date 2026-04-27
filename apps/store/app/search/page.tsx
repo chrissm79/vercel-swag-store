@@ -1,6 +1,7 @@
 import { ProductCard } from "@/components/product-card";
 import { SearchFilter } from "@/components/search-filter";
 import { SearchInput } from "@/components/search-input";
+import { CategorySlug } from "@/lib/api";
 import { storeClient } from "@/lib/server/store-client";
 import {
   Pagination,
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
 type SearchPageProps = {
   searchParams: Promise<{
     q?: string;
-    category?: string;
+    category?: CategorySlug;
     page?: string;
   }>;
 };
