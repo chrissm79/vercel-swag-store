@@ -15,6 +15,8 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
+  throw new Error("Temporary top-level boundary preview");
+
   return (
     <>
       <Suspense fallback={<PromoBannerSkeleton />}>
