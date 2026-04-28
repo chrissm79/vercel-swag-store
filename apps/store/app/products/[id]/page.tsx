@@ -1,8 +1,8 @@
+import { ProductImage } from "@/components/product-image";
 import { Product, ProductStock } from "@/lib/api";
 import { storeClient } from "@/lib/server/store-client";
 import { currencyFormatter } from "@/lib/string-utils";
 import { Metadata } from "next";
-import Image from "next/image";
 import { Suspense } from "react";
 import { AddToCart } from "./add-to-cart";
 
@@ -59,13 +59,11 @@ async function ProductDetail({ params }: PageProps) {
         </p>
         <StockAction product={product} stock={stock} />
       </div>
-      <div className="relative aspect-square bg-white overflow-hidden border-b border-border">
-        <Image
-          src={product.images[0]}
-          alt={product.name}
-          fill
-          className="object-contain"
-        />
+      <ProductImage
+        src={product.images?.[0]}
+        alt={product.name}
+        variant="detail"
+      >
         <div className="absolute top-2 right-2 flex gap-2">
           {product.featured && (
             <span className="text-xs font-medium bg-primary text-primary-foreground px-2 py-1">
@@ -74,7 +72,7 @@ async function ProductDetail({ params }: PageProps) {
           )}
           <StockBadge lowStock={stock.lowStock} inStock={stock.inStock} />
         </div>
-      </div>
+      </ProductImage>
     </div>
   );
 }

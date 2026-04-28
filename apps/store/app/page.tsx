@@ -1,4 +1,5 @@
 import { ProductCard } from "@/components/product-card";
+import { ProductImage } from "@/components/product-image";
 import { PromoBanner, PromoBannerSkeleton } from "@/components/promo-banner";
 import { storeClient } from "@/lib/server/store-client";
 import { buttonVariants } from "@workspace/ui/button";
@@ -6,7 +7,6 @@ import { Icon } from "@workspace/ui/icon";
 import { cn } from "@workspace/ui/lib/utils";
 import { Skeleton } from "@workspace/ui/skeleton";
 import { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -15,8 +15,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  throw new Error("Temporary top-level boundary preview");
-
   return (
     <>
       <Suspense fallback={<PromoBannerSkeleton />}>
@@ -41,14 +39,7 @@ export default async function Home() {
             </Link>
           </div>
           <div className="flex items-center justify-center">
-            <div className="size-full bg-muted aspect-square relative">
-              <Image
-                src="/hero.png"
-                alt="Hero"
-                fill
-                className="object-contain"
-              />
-            </div>
+            <ProductImage src="/hero.png" alt="Hero" variant="hero" priority />
           </div>
         </div>
         <div className="flex flex-col gap-4">

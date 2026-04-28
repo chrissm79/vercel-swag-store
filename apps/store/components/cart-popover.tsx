@@ -6,8 +6,8 @@ import { ButtonGroup } from "@workspace/ui/button-group";
 import { Icon } from "@workspace/ui/icon";
 import { Popover, PopoverContent, PopoverTrigger } from "@workspace/ui/popover";
 import { Separator } from "@workspace/ui/separator";
-import Image from "next/image";
 import { useCart } from "./cart-provider";
+import { ProductImage } from "./product-image";
 
 export function CartPopover() {
   const { cart, error, updateItem, removeItem } = useCart();
@@ -57,12 +57,10 @@ export function CartPopover() {
                 return (
                   <li key={itemId} className="flex gap-3 p-4">
                     {image && (
-                      <Image
+                      <ProductImage
                         src={image}
                         alt={name}
-                        width={64}
-                        height={64}
-                        className="rounded-md object-cover bg-muted shrink-0"
+                        variant="cart"
                       />
                     )}
                     <div className="flex-1 flex flex-col gap-2 min-w-0">
