@@ -46,7 +46,7 @@ export default async function Home() {
           <div className="flex justify-between items-center">
             <h3 className="text-2xl font-bold">Featured Products</h3>
             <Link
-              href="/products"
+              href="/search"
               className={cn(
                 buttonVariants({ variant: "ghost" }),
                 "font-semibold text-muted-foreground",
