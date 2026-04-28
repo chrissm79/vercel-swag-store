@@ -1,14 +1,16 @@
 import { getCartToken } from "@/lib/server/cart-session";
 import { storeClient } from "@/lib/server/store-client";
+import { CartHydrator } from "./cart-hydrator";
 import { CartPopover } from "./cart-popover";
 
 export async function UserCart() {
   const token = await getCartToken();
-  if (!token) {
-    return <CartPopover cart={null} />;
-  }
+  const cart = token ? await storeClient.getCart(token) : null;
 
-  const cart = await storeClient.getCart(token);
-
-  return <CartPopover cart={cart.data} />;
+  return (
+    <>
+      <CartHydrator cart={cart?.data ?? null} />
+      <CartPopover />
+    </>
+  );
 }

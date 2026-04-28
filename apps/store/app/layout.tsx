@@ -1,5 +1,6 @@
 import { AppFooter } from "@/components/app-footer";
 import { AppHeader } from "@/components/app-header";
+import { CartProvider } from "@/components/cart-provider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -38,9 +39,11 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
       <body className="min-h-dvh flex flex-col">
-        <AppHeader />
-        <main className="flex-1">{children}</main>
-        <AppFooter />
+        <CartProvider>
+          <AppHeader />
+          <main className="flex-1">{children}</main>
+          <AppFooter />
+        </CartProvider>
       </body>
     </html>
   );

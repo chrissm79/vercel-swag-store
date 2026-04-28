@@ -1,11 +1,11 @@
 "use client";
 
-import { addToCart } from "@/actions/cart";
+import { useCart } from "@/components/cart-provider";
 import { ProductQuantityPicker } from "@/components/product-quantity-picker";
-import { CartWithProducts, Product } from "@/lib/api/generated";
+import { Product } from "@/lib/api/generated";
 import { Button } from "@workspace/ui/button";
 import { Icon } from "@workspace/ui/icon";
-import { useActionState, useState } from "react";
+import { FormEvent, useState } from "react";
 
 type AddToCartProps = {
   product: Product;
@@ -14,20 +14,19 @@ type AddToCartProps = {
 };
 
 export function AddToCart({ inStock: max, product, disabled }: AddToCartProps) {
+  const { addItem, isPending } = useCart();
   const [quantity, setQuantity] = useState(1);
-  const [, action, isPending] = useActionState(
-    async (prevState: CartWithProducts | null, formData: FormData) => {
-      const qty = Number(formData.get("quantity"));
-      if (qty <= 0 || qty > max || !product.id) {
-        return prevState;
-      }
-      return addToCart(prevState, { productId: product.id, quantity: qty });
-    },
-    null,
-  );
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (quantity <= 0 || quantity > max || !product.id) return;
+
+    addItem(product, quantity);
+  };
 
   return (
-    <form className="flex justify-between w-full gap-2" action={action}>
+    <form className="flex justify-between w-full gap-2" onSubmit={handleSubmit}>
       <Button
         type="submit"
         className="rounded-none px-12!"

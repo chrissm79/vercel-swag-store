@@ -1,7 +1,5 @@
 "use client";
 
-import { removeFromCart, updateCartItem } from "@/actions/cart";
-import { CartWithProducts } from "@/lib/api";
 import { currencyFormatter, formatCents } from "@/lib/string-utils";
 import { Button } from "@workspace/ui/button";
 import { ButtonGroup } from "@workspace/ui/button-group";
@@ -9,26 +7,15 @@ import { Icon } from "@workspace/ui/icon";
 import { Popover, PopoverContent, PopoverTrigger } from "@workspace/ui/popover";
 import { Separator } from "@workspace/ui/separator";
 import Image from "next/image";
+import { useCart } from "./cart-provider";
 
-type CartPopoverProps = {
-  cart: CartWithProducts | null;
-};
-
-export function CartPopover({ cart }: CartPopoverProps) {
+export function CartPopover() {
+  const { cart, error, updateItem, removeItem } = useCart();
   const items = cart?.items ?? [];
   const itemCount = cart?.totalItems ?? 0;
   const subtotal = cart?.subtotal ?? 0;
   const currency = cart?.currency ?? "USD";
   const formatter = currencyFormatter(currency);
-
-  const handleUpdate = async (itemId: string, quantity: number) => {
-    if (quantity < 1) return;
-    await updateCartItem(itemId, quantity);
-  };
-
-  const handleRemove = async (itemId: string) => {
-    await removeFromCart(itemId);
-  };
 
   return (
     <Popover>
@@ -47,6 +34,11 @@ export function CartPopover({ cart }: CartPopoverProps) {
         <div className="p-4">
           <h2 className="font-semibold text-sm">Your Cart</h2>
         </div>
+        {error && (
+          <div className="mx-4 mb-3 rounded-sm border border-destructive/30 bg-destructive/10 px-3 py-2 text-xs text-destructive">
+            {error}
+          </div>
+        )}
         <Separator />
         {items.length === 0 ? (
           <div className="p-6 text-center text-sm text-muted-foreground">
@@ -96,7 +88,7 @@ export function CartPopover({ cart }: CartPopoverProps) {
                             size="icon"
                             className="size-8 rounded-none"
                             onClick={() =>
-                              handleUpdate(itemId, (item.quantity ?? 0) - 1)
+                              updateItem(itemId, (item.quantity ?? 0) - 1)
                             }
                             disabled={(item.quantity ?? 0) <= 1}
                             aria-label="Decrease quantity"
@@ -117,7 +109,7 @@ export function CartPopover({ cart }: CartPopoverProps) {
                             size="icon"
                             className="size-8 rounded-none"
                             onClick={() =>
-                              handleUpdate(itemId, (item.quantity ?? 0) + 1)
+                              updateItem(itemId, (item.quantity ?? 0) + 1)
                             }
                             aria-label="Increase quantity"
                           >
@@ -134,7 +126,7 @@ export function CartPopover({ cart }: CartPopoverProps) {
                           variant="ghost"
                           size="icon"
                           className="size-8 text-muted-foreground hover:text-destructive"
-                          onClick={() => handleRemove(itemId)}
+                          onClick={() => removeItem(itemId)}
                           aria-label={`Remove ${name} from cart`}
                         >
                           <Icon name="trash" className="size-4" />
