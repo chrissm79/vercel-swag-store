@@ -30,8 +30,11 @@ function createStoreClient() {
       return apiRequest((client) => client.getProductStock({ path: { id } }));
     },
     getPromotions: async () => {
-      // NOTE: Not caching the response because we don't want to
-      // cache invalid promotions.
+      "use cache";
+
+      cacheLife("promotions");
+      cacheTag("promotions");
+
       return apiRequest((client) => client.getActivePromotion());
     },
     getCategories: async () => {
