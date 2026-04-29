@@ -13,7 +13,6 @@ import {
   useCallback,
   useMemo,
   useOptimistic,
-  useRef,
   useState,
 } from "react";
 
@@ -128,21 +127,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   );
   const [error, setError] = useState<string | null>(null);
   const [pendingCount, setPendingCount] = useState(0);
-  const pendingCountRef = useRef(0);
   const [optimisticCart, updateOptimisticCart] = useOptimistic(
     confirmedCart,
     optimisticCartReducer,
   );
-
-  const incrementPendingCount = useCallback(() => {
-    pendingCountRef.current += 1;
-    setPendingCount(pendingCountRef.current);
-  }, []);
-
-  const decrementPendingCount = useCallback(() => {
-    pendingCountRef.current = Math.max(0, pendingCountRef.current - 1);
-    setPendingCount(pendingCountRef.current);
-  }, []);
 
   const runMutation = useCallback(
     async (
@@ -153,7 +141,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       const rollbackCart = confirmedCart;
 
       setError(null);
-      incrementPendingCount();
+      setPendingCount((count) => count + 1);
 
       startTransition(() => {
         updateOptimisticCart(optimisticAction);
@@ -172,21 +160,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         });
         setError(errorMessage);
       } finally {
-        decrementPendingCount();
+        setPendingCount((count) => Math.max(0, count - 1));
       }
     },
-    [
-      confirmedCart,
-      decrementPendingCount,
-      incrementPendingCount,
-      updateOptimisticCart,
-    ],
+    [confirmedCart, updateOptimisticCart],
   );
 
   const hydrateCart = useCallback(
     (cart: CartWithProducts | null) => {
-      if (pendingCountRef.current > 0) return;
-
       setConfirmedCart(cart);
       startTransition(() => {
         updateOptimisticCart({ type: "hydrate", cart });
