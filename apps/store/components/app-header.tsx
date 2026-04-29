@@ -1,6 +1,6 @@
-import { Icon } from "@workspace/ui/icon";
 import Link from "next/link";
 import { Suspense } from "react";
+import { CartPopover } from "./cart-popover";
 import { UserCart } from "./user-cart";
 
 export function AppHeader() {
@@ -21,13 +21,7 @@ export function AppHeader() {
             </li>
           </ul>
         </div>
-        <Suspense
-          fallback={
-            <Icon name="cart" className="size-5 text-muted-foreground" />
-          }
-        >
-          <UserCart />
-        </Suspense>
+        <HeaderCart />
       </nav>
       <nav className="h-15 flex md:hidden justify-between items-center px-4">
         <div className="flex gap-4">
@@ -46,15 +40,20 @@ export function AppHeader() {
             </li>
           </ul>
         </div>
-        <Suspense
-          fallback={
-            <Icon name="cart" className="size-5 text-muted-foreground" />
-          }
-        >
-          <UserCart />
-        </Suspense>
+        <HeaderCart />
       </nav>
     </header>
+  );
+}
+
+function HeaderCart() {
+  return (
+    <>
+      <Suspense fallback={null}>
+        <UserCart />
+      </Suspense>
+      <CartPopover />
+    </>
   );
 }
 
