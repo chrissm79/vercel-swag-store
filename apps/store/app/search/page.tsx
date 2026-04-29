@@ -47,12 +47,6 @@ async function SearchResults({ searchParams }: SearchPageProps) {
 
   return (
     <>
-      <div className="flex gap-4 items-center justify-between">
-        <Suspense fallback={<Skeleton className="h-9 w-48" />}>
-          <SearchCategories />
-        </Suspense>
-        <SearchInput />
-      </div>
       {products.data.length === 0 && <EmptySearchResults />}
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -89,7 +83,6 @@ async function SearchCategories() {
 function SearchResultsSkeleton() {
   return (
     <>
-      <Skeleton className="h-9" />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {Array.from({ length: 5 }).map((_, index) => (
           <Skeleton key={index} className="h-full w-full aspect-square" />
@@ -104,7 +97,8 @@ function EmptySearchResults() {
     <div className="text-center py-16">
       <h2 className="text-2xl font-semibold mb-4">No products found</h2>
       <p className="text-muted-foreground">
-        Try adjusting your search or filter to find what you're looking for.
+        Try adjusting your search or filter to find what you&apos;re looking
+        for.
       </p>
     </div>
   );
@@ -113,6 +107,14 @@ function EmptySearchResults() {
 export default function SearchPage({ searchParams }: SearchPageProps) {
   return (
     <div className="container flex flex-col gap-8 py-8">
+      <div className="flex gap-4 items-center justify-between">
+        <Suspense fallback={<Skeleton className="h-9 w-48" />}>
+          <SearchCategories />
+        </Suspense>
+        <Suspense fallback={<Skeleton className="h-9 md:min-w-80" />}>
+          <SearchInput />
+        </Suspense>
+      </div>
       <Suspense fallback={<SearchResultsSkeleton />}>
         <SearchResults searchParams={searchParams} />
       </Suspense>

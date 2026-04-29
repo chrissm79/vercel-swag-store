@@ -5,11 +5,22 @@ import { CartPopover } from "./cart-popover";
 
 export async function UserCart() {
   const token = await getCartToken();
-  const cart = token ? await storeClient.getCart(token) : null;
+  let cart: Awaited<ReturnType<typeof storeClient.getCart>> | null = null;
+  let shouldClearCartToken = false;
+
+  try {
+    cart = token ? await storeClient.getCart(token) : null;
+  } catch {
+    shouldClearCartToken = true;
+    cart = null;
+  }
 
   return (
     <>
-      <CartHydrator cart={cart?.data ?? null} />
+      <CartHydrator
+        cart={cart?.data ?? null}
+        clearCartToken={shouldClearCartToken}
+      />
       <CartPopover />
     </>
   );

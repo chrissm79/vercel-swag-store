@@ -1,14 +1,21 @@
 "use server";
 
 import { CartWithProducts } from "@/lib/api";
-import { getCartToken, getOrCreateCartToken } from "@/lib/server/cart-session";
+import {
+  clearCartToken,
+  getCartToken,
+  getOrCreateCartToken,
+} from "@/lib/server/cart-session";
 import { storeClient } from "@/lib/server/store-client";
-import { revalidatePath } from "next/cache";
 
 type AddToCartInput = {
   productId: string;
   quantity: number;
 };
+
+export async function clearCart(): Promise<void> {
+  await clearCartToken();
+}
 
 export async function addToCart(
   formState: CartWithProducts | null,
@@ -21,7 +28,6 @@ export async function addToCart(
     input.quantity,
   );
 
-  revalidatePath("/", "layout");
   return cart.data;
 }
 
@@ -32,10 +38,13 @@ export async function removeFromCart(
 
   if (!token) return null;
 
-  const cart = await storeClient.removeCartItem(token, itemId);
-
-  revalidatePath("/", "layout");
-  return cart.data;
+  try {
+    const cart = await storeClient.removeCartItem(token, itemId);
+    return cart.data;
+  } catch {
+    await clearCartToken();
+    return null;
+  }
 }
 
 export async function updateCartItem(
@@ -46,8 +55,11 @@ export async function updateCartItem(
 
   if (!token) return null;
 
-  const cart = await storeClient.updateCartItem(token, itemId, quantity);
-
-  revalidatePath("/", "layout");
-  return cart.data;
+  try {
+    const cart = await storeClient.updateCartItem(token, itemId, quantity);
+    return cart.data;
+  } catch {
+    await clearCartToken();
+    return null;
+  }
 }
